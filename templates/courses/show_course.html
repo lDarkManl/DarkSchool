@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+    <p>{{ course.title }}</p>
+    <p>{{ course.teacher.name }}</p>
+    <p>{{ course.discipline.title }}</p>
+    {% for schoolwork in course.lessons.all %}
+        <a href="">{{ schoolwork.title }}</a>
+    {% endfor %}
+
+{% endblock %}

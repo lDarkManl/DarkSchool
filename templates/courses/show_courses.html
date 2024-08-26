@@ -1,7 +1,8 @@
-<html>
-    <body>
-        {% for teacher in teachers %}
-            <p>{{ teacher.name }}</p>
-        {% endfor %}
-    </body>
-</html>
+{% extends 'base.html' %}
+
+
+{% block main %}
+    {% for course in courses %}
+        <a href="{% url 'courses:course' course.id %}">{{ course.title }}</a>
+    {% endfor %}
+{% endblock %}

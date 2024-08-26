@@ -23,30 +23,36 @@ class Course(models.Model):
 
 # Абстрактный класс для занятия
 class SchoolWork(models.Model):
-    course = models.ForeignKey(
-        Course,
-        on_delete=models.CASCADE,
-        verbose_name='course',
-        related_name='lessons'
-    )
     video = models.URLField('Ссылка на видео')
     tasks = models.ManyToManyField(
         'tasks.Task',
         blank=True,
         null=True,
         verbose_name='tasks',
-        related_name='lessons'
+        related_name='schoolworks'
     )
 
 
 # Урок, в котором видео и дз
 class Lesson(SchoolWork):
     title = models.CharField('Название урока', max_length=100)
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        verbose_name='course',
+        related_name='lessons'
+    )
 
 
 # Вебинар, в котором ссылка на стрим и дз
 class Webinar(SchoolWork):
     title = models.CharField('Название вебинара', max_length=100)
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        verbose_name='course',
+        related_name='webinars'
+    )
 
 
 # Домашнее задание конкретного ученика
