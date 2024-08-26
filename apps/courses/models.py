@@ -17,6 +17,9 @@ class Course(models.Model):
         related_name='courses'
     )
 
+    class Meta:
+        app_label = 'courses'
+
 
 # Абстрактный класс для занятия
 class SchoolWork(models.Model):
