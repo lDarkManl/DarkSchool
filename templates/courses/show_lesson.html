@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+    <p>{{ lesson.title }}</p>
+    <a href="{{ lesson.video }}">Видео</a>
+    <a href="{% url 'courses:homework' lesson.id %}">Домашнее задание</a>
+{% endblock %}
