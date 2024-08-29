@@ -1,6 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, reverse
 from django.views.generic import ListView, DetailView
+from django.views import View
+from django.http import HttpResponseRedirect
+
 from courses.models import Course, Lesson
+from courses import services
 
 
 class ShowCourses(ListView):
@@ -14,10 +18,15 @@ class ShowCourse(DetailView):
     template_name = 'courses/show_course.html'
     context_object_name = 'course'
 
-class ShowLesson(DetailView):
-    model = Lesson
-    template_name = 'courses/show_lesson.html'
-    context_object_name = 'lesson'
+class ShowLesson(View):
 
-class ShowHomework(ListView):
-    pass
+    def get(self, request, pk):
+        context = services.get_context_for_lesson(pk)
+        return render(request, 'courses/show_lesson.html', context)
+
+    def post(self, request, pk):
+        form = services.save_answers(request)
+        if form:
+            context = services.get_context_for_lesson(pk)
+            return render(request, 'courses/show_lesson.html', context)
+        return HttpResponseRedirect(reverse('courses:lesson', args=[pk]))

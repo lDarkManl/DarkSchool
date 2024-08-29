@@ -55,26 +55,20 @@ class Webinar(SchoolWork):
     )
 
 
-# Домашнее задание конкретного ученика
-class StudentHomeWork(models.Model):
-    student = models.ForeignKey(
-        'accounts.StudentAccount',
-        on_delete=models.CASCADE,
-        verbose_name='student',
-        related_name='homeworks'
-    )
-    tasks = models.ManyToManyField(
+# Ответ ученика на конкретное задание в уроке
+class StudentAnswer(models.Model):
+    answer = models.CharField('Ответ на задание', max_length=200, blank=True, null=True)
+    task = models.ForeignKey(
         'tasks.Task',
-        blank=True,
-        null=True,
-        verbose_name='tasks',
-        related_name='homeworks'
+        on_delete=models.CASCADE,
+        verbose_name='task',
+        related_name='answers'
     )
     lesson = models.ForeignKey(
         Lesson,
         on_delete=models.CASCADE,
         verbose_name='lesson',
-        related_name='homework'
+        related_name='answers'
     )
 
 

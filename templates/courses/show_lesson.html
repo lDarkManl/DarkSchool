@@ -4,5 +4,12 @@
 {% block main %}
     <p>{{ lesson.title }}</p>
     <a href="{{ lesson.video }}">Видео</a>
-    <a href="{% url 'courses:homework' lesson.id %}">Домашнее задание</a>
+    <form action="{% url 'courses:lesson' lesson.pk %}" method="post">
+        {% csrf_token %}
+        {% for task, answer_form in tasks.items %}
+            <p>{{ task.text }}</p>
+            <p>{{ answer_form }}</p>
+        {% endfor %}
+        <button>Отправить</button>
+    </form>
 {% endblock %}
