@@ -18,6 +18,7 @@ class ShowCourse(DetailView):
     template_name = 'courses/show_course.html'
     context_object_name = 'course'
 
+
 class ShowLesson(View):
 
     def get(self, request, pk):

@@ -17,8 +17,9 @@ class Course(models.Model):
         related_name='courses'
     )
 
-    class Meta:
-        app_label = 'courses'
+    def __str__(self):
+        return self.title
+
 
 
 # Абстрактный класс для занятия
@@ -43,6 +44,9 @@ class Lesson(SchoolWork):
         related_name='lessons'
     )
 
+    def __str__(self):
+        return self.title
+
 
 # Вебинар, в котором ссылка на стрим и дз
 class Webinar(SchoolWork):
@@ -53,6 +57,9 @@ class Webinar(SchoolWork):
         verbose_name='course',
         related_name='webinars'
     )
+
+    def __str__(self):
+        return self.title
 
 
 # Ответ ученика на конкретное задание в уроке
@@ -71,6 +78,15 @@ class StudentAnswer(models.Model):
         related_name='answers'
     )
 
+    def __str__(self):
+        return self.answer
+
+    def check_answer(self):
+        return self.answer == self.task.answer
+
 
 class Discipline(models.Model):
     title = models.CharField('Название предмета', max_length=100)
+
+    def __str__(self):
+        return self.title
