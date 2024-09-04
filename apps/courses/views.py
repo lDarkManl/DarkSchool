@@ -23,11 +23,25 @@ class ShowLesson(View):
 
     def get(self, request, pk):
         context = services.get_context_for_lesson(pk)
-        return render(request, 'courses/show_lesson.html', context)
+        return render(request, 'courses/show_schoolwork.html', context)
 
     def post(self, request, pk):
         form = services.save_answers(request)
         if form:
             context = services.get_context_for_lesson(pk)
-            return render(request, 'courses/show_lesson.html', context)
+            return render(request, 'courses/show_schoolwork.html', context)
         return HttpResponseRedirect(reverse('courses:lesson', args=[pk]))
+
+
+class ShowWebinar(View):
+
+    def get(self, request, pk):
+        context = services.get_context_for_webinar(pk)
+        return render(request, 'courses/show_schoolwork.html', context)
+
+    def post(self, request, pk):
+        form = services.save_answers(request)
+        if form:
+            context = services.get_context_for_webinar(pk)
+            return render(request, 'courses/show_schoolwork.html', context)
+        return HttpResponseRedirect(reverse('courses:webinar', args=[pk]))

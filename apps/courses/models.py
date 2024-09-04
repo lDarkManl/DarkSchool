@@ -21,17 +21,12 @@ class Course(models.Model):
         return self.title
 
 
-
 # Абстрактный класс для занятия
 class SchoolWork(models.Model):
     video = models.URLField('Ссылка на видео')
-    tasks = models.ManyToManyField(
-        'tasks.Task',
-        blank=True,
-        null=True,
-        verbose_name='tasks',
-        related_name='schoolworks'
-    )
+
+    class Meta:
+        abstract = True
 
 
 # Урок, в котором видео и дз
@@ -41,6 +36,13 @@ class Lesson(SchoolWork):
         Course,
         on_delete=models.CASCADE,
         verbose_name='course',
+        related_name='lessons'
+    )
+    tasks = models.ManyToManyField(
+        'tasks.Task',
+        blank=True,
+        null=True,
+        verbose_name='tasks',
         related_name='lessons'
     )
 
@@ -57,6 +59,13 @@ class Webinar(SchoolWork):
         verbose_name='course',
         related_name='webinars'
     )
+    tasks = models.ManyToManyField(
+        'tasks.Task',
+        blank=True,
+        null=True,
+        verbose_name='tasks',
+        related_name='webinars'
+    )
 
     def __str__(self):
         return self.title
@@ -65,24 +74,45 @@ class Webinar(SchoolWork):
 # Ответ ученика на конкретное задание в уроке
 class StudentAnswer(models.Model):
     answer = models.CharField('Ответ на задание', max_length=200, blank=True, null=True)
-    task = models.ForeignKey(
-        'tasks.Task',
-        on_delete=models.CASCADE,
-        verbose_name='task',
-        related_name='answers'
-    )
-    lesson = models.ForeignKey(
-        Lesson,
-        on_delete=models.CASCADE,
-        verbose_name='lesson',
-        related_name='answers'
-    )
 
     def __str__(self):
         return self.answer
 
     def check_answer(self):
         return self.answer == self.task.answer
+
+    class Meta:
+        abstract = True
+
+
+class StudentAnswerLesson(StudentAnswer):
+    lesson = models.ForeignKey(
+        Lesson,
+        on_delete=models.CASCADE,
+        verbose_name='lesson',
+        related_name='answers'
+    )
+    task = models.ForeignKey(
+        'tasks.Task',
+        on_delete=models.CASCADE,
+        verbose_name='task',
+        related_name='answers_lessons'
+    )
+
+
+class StudentAnswerWebinar(StudentAnswer):
+    webinar = models.ForeignKey(
+        Webinar,
+        on_delete=models.CASCADE,
+        verbose_name='webinar',
+        related_name='answers'
+    )
+    task = models.ForeignKey(
+        'tasks.Task',
+        on_delete=models.CASCADE,
+        verbose_name='task',
+        related_name='answers_webinars'
+    )
 
 
 class Discipline(models.Model):

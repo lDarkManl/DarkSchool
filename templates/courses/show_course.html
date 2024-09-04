@@ -8,5 +8,8 @@
     {% for lesson in course.lessons.all %}
         <a href="{% url 'courses:lesson' lesson.id %}">{{ lesson.title }}</a>
     {% endfor %}
+    {% for webinar in course.webinars.all %}
+        <a href="{% url 'courses:webinar' webinar.id %}">{{ webinar.title }}</a>
+    {% endfor %}
 
 {% endblock %}
