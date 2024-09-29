@@ -1,16 +1,22 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 
-class Account(models.Model):
+class User(AbstractUser):
+    is_student = models.BooleanField(default=False)
+    is_teacher = models.BooleanField(default=False)
+
+
+class TeacherAccount(models.Model):
     name = models.CharField('Имя', max_length=100)
     age = models.IntegerField('Возраст')
     info = models.TextField('Информация о человеке')
-
-    class Meta:
-        abstract = True
-
-
-class TeacherAccount(Account):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name='user',
+        related_name='teacher'
+    )
     discipline = models.ForeignKey(
         'courses.Discipline',
         on_delete=models.CASCADE,
@@ -19,8 +25,17 @@ class TeacherAccount(Account):
     )
 
 
-class StudentAccount(Account):
+class StudentAccount(models.Model):
+    name = models.CharField('Имя', max_length=100)
+    age = models.IntegerField('Возраст')
+    info = models.TextField('Информация о человеке')
     details = models.TextField('Реквизиты для оплаты')
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name='user',
+        related_name='student',
+    )
     courses = models.ManyToManyField(
         'courses.Course',
         blank=True,
