@@ -20,7 +20,7 @@ class StudentSignUpView(CreateView):
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
-        return redirect('student-home')
+        return redirect('accounts:student_home')
 
 class TeacherSignUpView(CreateView):
     model = User
@@ -34,7 +34,7 @@ class TeacherSignUpView(CreateView):
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
-        return redirect('teacher-home')
+        return redirect('accounts:teacher_home')
 
 class LoginView(auth_views.LoginView):
     form_class = LoginForm
@@ -47,11 +47,13 @@ class LoginView(auth_views.LoginView):
         user = self.request.user
         if user.is_authenticated:
             if user.is_student:
-                return reverse('student-home')
+                return reverse('accounts:student-home')
             elif user.is_teacher:
-                return reverse('teacher-home')
+                return reverse('accounts:teacher-home')
+            else:
+                return reverse('accounts:login')
         else:
-            return reverse('login')
+            return reverse('accounts:login')
 
 @login_required
 @student_required
