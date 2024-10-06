@@ -1,3 +1,5 @@
+from django.contrib.auth import REDIRECT_FIELD_NAME
+from django.contrib.auth.mixins import UserPassesTestMixin
 from courses.models import Course, Lesson, Webinar
 from courses.forms import StudentAnswerForm
 
@@ -29,3 +31,15 @@ def save_answers(request):
         else:
             return form
     return None
+
+class StudentRequiredMixin(UserPassesTestMixin):
+    login_url = 'accounts:login'
+
+    def test_func(self):
+        self.test_func = lambda u: u.is_active and u.is_student
+
+class TeacherRequiredMixin(UserPassesTestMixin):
+    login_url = 'accounts:login'
+
+    def test_func(self):
+        return self.request.user.is_teacher
