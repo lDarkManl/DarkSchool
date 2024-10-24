@@ -6,9 +6,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from courses.models import Course, Lesson
 from courses import services
+from courses.forms import LessonForm, CourseForm
 from tasks.forms import TaskForm
 from tasks.models import Task
-
 
 
 class ShowCourses(ListView):
@@ -62,3 +62,25 @@ class CreateTask(services.TeacherRequiredMixin, LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse('tasks:task', args=[self.object.pk])
 
+class CreateLesson(services.TeacherRequiredMixin, LoginRequiredMixin, CreateView):
+    model = Lesson
+    form_class = LessonForm
+    template_name = 'courses/create_lesson.html'
+
+    def get_success_url(self):
+        return reverse('courses:lesson', args=[self.object.pk])
+
+class CreateCourse(services.TeacherRequiredMixin, LoginRequiredMixin, CreateView):
+    model = Course
+    form_class = CourseForm
+    template_name = 'courses/create_course.html'
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.teacher = self.request.user.teacher
+        self.object.discipline = self.request.user.teacher.discipline
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('courses:course', args=[self.object.pk])
