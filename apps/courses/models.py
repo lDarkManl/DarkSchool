@@ -1,5 +1,15 @@
 from django.db import models
 
+class Task(models.Model):
+    discipline = models.ForeignKey(
+        'courses.Discipline',
+        on_delete=models.CASCADE,
+        verbose_name='discipline',
+        related_name='tasks'
+    )
+    text = models.TextField('Текст задачи')
+    answer = models.TextField('Ответ на задачу')
+
 
 class Course(models.Model):
     title = models.CharField('Название курса', max_length=100)
@@ -39,7 +49,7 @@ class Lesson(SchoolWork):
         related_name='lessons'
     )
     tasks = models.ManyToManyField(
-        'tasks.Task',
+        'courses.Task',
         blank=True,
         null=True,
         verbose_name='tasks',
@@ -60,7 +70,7 @@ class Webinar(SchoolWork):
         related_name='webinars'
     )
     tasks = models.ManyToManyField(
-        'tasks.Task',
+        'courses.Task',
         blank=True,
         null=True,
         verbose_name='tasks',
@@ -93,7 +103,7 @@ class StudentAnswerLesson(StudentAnswer):
         related_name='answers'
     )
     task = models.ForeignKey(
-        'tasks.Task',
+        'courses.Task',
         on_delete=models.CASCADE,
         verbose_name='task',
         related_name='answers_lessons'
@@ -108,7 +118,7 @@ class StudentAnswerWebinar(StudentAnswer):
         related_name='answers'
     )
     task = models.ForeignKey(
-        'tasks.Task',
+        'courses.Task',
         on_delete=models.CASCADE,
         verbose_name='task',
         related_name='answers_webinars'

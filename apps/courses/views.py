@@ -4,11 +4,10 @@ from django.views import View
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from courses.models import Course, Lesson
+from courses.models import Course, Lesson, Task
 from courses import services
-from courses.forms import LessonForm, CourseForm
-from tasks.forms import TaskForm
-from tasks.models import Task
+from courses.forms import LessonForm, CourseForm, TaskForm
+
 
 
 class ShowCourses(ListView):
@@ -84,3 +83,8 @@ class CreateCourse(services.TeacherRequiredMixin, LoginRequiredMixin, CreateView
 
     def get_success_url(self):
         return reverse('courses:course', args=[self.object.pk])
+
+class TaskView(DetailView):
+    model = Task
+    template_name = 'courses/task.html'
+    context_object_name = 'task'

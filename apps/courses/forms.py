@@ -1,6 +1,10 @@
 from django import forms
-from courses.models import Lesson, Course, StudentAnswerLesson, StudentAnswerWebinar
+from courses.models import Lesson, Course, StudentAnswerLesson, StudentAnswerWebinar, Task
 
+class TaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ('text', 'answer')
 
 class StudentAnswerForm(forms.ModelForm):
     class Meta:

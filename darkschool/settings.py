@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'chats',
     'courses',
     'reviews',
-    'tasks',
     'news',
 ]
 
