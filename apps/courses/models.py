@@ -42,10 +42,11 @@ class SchoolWork(models.Model):
 # Урок, в котором видео и дз
 class Lesson(SchoolWork):
     title = models.CharField('Название урока', max_length=100)
-    course = models.ForeignKey(
+    courses = models.ManyToManyField(
         Course,
-        on_delete=models.CASCADE,
-        verbose_name='course',
+        blank=True,
+        null=True,
+        verbose_name='courses',
         related_name='lessons'
     )
     tasks = models.ManyToManyField(
@@ -63,10 +64,11 @@ class Lesson(SchoolWork):
 # Вебинар, в котором ссылка на стрим и дз
 class Webinar(SchoolWork):
     title = models.CharField('Название вебинара', max_length=100)
-    course = models.ForeignKey(
+    courses = models.ManyToManyField(
         Course,
-        on_delete=models.CASCADE,
-        verbose_name='course',
+        blank=True,
+        null=True,
+        verbose_name='courses',
         related_name='webinars'
     )
     tasks = models.ManyToManyField(

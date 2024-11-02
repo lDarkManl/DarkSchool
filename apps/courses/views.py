@@ -4,9 +4,9 @@ from django.views import View
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from courses.models import Course, Lesson, Task
+from courses.models import Course, Lesson, Webinar, Task
 from courses import services
-from courses.forms import LessonForm, CourseForm, TaskForm
+from courses.forms import LessonForm, WebinarForm, CourseForm, TaskForm
 
 
 
@@ -69,6 +69,14 @@ class CreateLesson(services.TeacherRequiredMixin, LoginRequiredMixin, CreateView
     def get_success_url(self):
         return reverse('courses:lesson', args=[self.object.pk])
 
+class CreateWebinar(services.TeacherRequiredMixin, LoginRequiredMixin, CreateView):
+    model = Webinar
+    form_class = WebinarForm
+    template_name = 'courses/create_webinar.html'
+
+    def get_success_url(self):
+        return reverse('courses:webinar', args=[self.object.pk])
+
 class CreateCourse(services.TeacherRequiredMixin, LoginRequiredMixin, CreateView):
     model = Course
     form_class = CourseForm
@@ -79,6 +87,9 @@ class CreateCourse(services.TeacherRequiredMixin, LoginRequiredMixin, CreateView
         self.object.teacher = self.request.user.teacher
         self.object.discipline = self.request.user.teacher.discipline
         self.object.save()
+        for lesson in form.cleaned_data['lessons']:
+            lesson.courses.add(self.object)
+            lesson.save()
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
