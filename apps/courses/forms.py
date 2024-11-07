@@ -19,7 +19,7 @@ class StudentAnswerForm(forms.ModelForm):
 class LessonForm(forms.ModelForm):
     class Meta:
         model = Lesson
-        fields = ('title', 'video', 'courses', 'tasks')
+        fields = ('title', 'video', 'courses', 'tasks', 'type')
 
 class CourseForm(forms.ModelForm):
     lessons = forms.ModelMultipleChoiceField(queryset=Lesson.objects.all())

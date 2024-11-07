@@ -6,39 +6,18 @@ from courses.forms import StudentAnswerForm
 def get_context_for_lesson(pk):
     lesson = Lesson.objects.get(pk=pk)
     context = {
-        'schoolwork': schoolwork,
-        'tasks': {task: form_class(initial={'task': task, 'lesson': schoolwork})
-                  for task in schoolwork.tasks.all()},
+        'lesson': lesson,
+        'tasks': {task: StudentAnswerForm(initial={'task': task, 'lesson': lesson})
+                  for task in lesson.tasks.all()},
     }
     return context
 
-def get_context_for_lesson(pk):
-    context = get_context_for_schoolwork(pk, Lesson)
-    return context
-
-def get_context_for_webinar(pk):
-    context = get_context_for_schoolwork(pk, Webinar)
-    return context
-
-def get_schoolwork_info(request):
-    schoolwork = request.POST.get('lesson')
-    if schoolwork is None:
-        schoolwork = request.POST.get('webinar')
-        schoolwork_title = 'webinar'
-        form = StudentAnswerWebinarForm
-    else:
-        schoolwork_title = 'lesson'
-        form = StudentAnswerLessonForm
-    return schoolwork_title, schoolwork, form
-
-
 def save_answers(request):
-    schoolwork_title, schoolwork, form_class = get_schoolwork_info(request)
+    lesson = request.POST.get('lesson')
     answers = request.POST.getlist('answer')
     tasks = request.POST.getlist('task')
-    print(request.user.student)
     for i in range(len(tasks)):
-        form = form_class({'answer': answers[i], 'task': tasks[i], schoolwork_title: schoolwork, 'student': request.user.student})
+        form = StudentAnswerForm({'answer': answers[i], 'task': tasks[i], 'lesson': lesson, 'student': request.user.student})
         if form.is_valid():
             form.save()
         else:

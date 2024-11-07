@@ -33,6 +33,10 @@ class Course(models.Model):
 
 # Урок, в котором видео и дз
 class Lesson(models.Model):
+    types = [
+        ('L', 'Урок'),
+        ('W', 'Вебинар')
+    ]
     title = models.CharField('Название урока', max_length=100)
     video = models.URLField('Ссылка на видео')
     courses = models.ManyToManyField(
@@ -49,8 +53,7 @@ class Lesson(models.Model):
         verbose_name='tasks',
         related_name='lessons'
     )
-    is_lesson = models.BooleanField(default=False)
-    is_webinar = models.BooleanField(default=False)
+    type = models.CharField(max_length=1, choices=types, default='L')
 
     def __str__(self):
         return self.title
