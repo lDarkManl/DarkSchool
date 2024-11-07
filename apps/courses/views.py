@@ -78,9 +78,6 @@ class TaskView(DetailView):
     template_name = 'courses/task.html'
     context_object_name = 'task'
 
-class ShowHomeworkLesson(View):
 
-    def get(self, request, pk):
-        context = services.get_context_for_howework(request, pk)
 
 

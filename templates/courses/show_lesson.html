@@ -2,9 +2,9 @@
 
 
 {% block main %}
-    <p>{{ schoolwork.title }}</p>
-    <a href="{{ schoolwork.video }}">Видео</a>
-    <form action="{% url 'courses:lesson' schoolwork.pk %}" method="post">
+    <p>{{ lesson.title }}</p>
+    <a href="{{ lesson.video }}">Видео</a>
+    <form action="{% url 'courses:lesson' lesson.pk %}" method="post">
         {% csrf_token %}
         {% for task, answer_form in tasks.items %}
             <p>{{ task.text }}</p>

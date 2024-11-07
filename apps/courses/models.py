@@ -71,13 +71,13 @@ class StudentAnswerLesson(models.Model):
         'courses.Task',
         on_delete=models.CASCADE,
         verbose_name='task',
-        related_name='answers_lessons'
+        related_name='answers'
     )
     student = models.ForeignKey(
         StudentAccount,
         on_delete=models.CASCADE,
         verbose_name='student',
-        related_name='answers_lessons'
+        related_name='answers'
     )
 
     def __str__(self):
