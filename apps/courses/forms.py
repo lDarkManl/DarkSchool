@@ -1,5 +1,5 @@
 from django import forms
-from courses.models import Lesson, Webinar, Course, StudentAnswerLesson, StudentAnswerWebinar, Task
+from courses.models import Lesson, Course, StudentAnswerLesson, Task
 
 class TaskForm(forms.ModelForm):
     class Meta:
@@ -9,10 +9,11 @@ class TaskForm(forms.ModelForm):
 class StudentAnswerForm(forms.ModelForm):
     class Meta:
         model = StudentAnswerLesson
-        fields = ('task', 'lesson', 'answer')
+        fields = ('task', 'lesson', 'answer', 'student')
         widgets = {
             'task': forms.HiddenInput(),
-            'lesson': forms.HiddenInput()
+            'lesson': forms.HiddenInput(),
+            'student': forms.HiddenInput()
         }
 
 class LessonForm(forms.ModelForm):
@@ -26,7 +27,3 @@ class CourseForm(forms.ModelForm):
         model = Course
         fields = ('title', 'price')
 
-class WebinarForm(forms.ModelForm):
-    class Meta:
-        model = Webinar
-        fields = ('title', 'video', 'courses', 'tasks')

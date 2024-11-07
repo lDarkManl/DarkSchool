@@ -24,6 +24,9 @@ class TeacherAccount(models.Model):
         related_name='teachers'
     )
 
+    def __str__(self):
+        return self.name
+
 
 class StudentAccount(models.Model):
     name = models.CharField('Имя', max_length=100)
@@ -43,3 +46,6 @@ class StudentAccount(models.Model):
         verbose_name='courses',
         related_name='students'
     )
+
+    def __str__(self):
+        return self.name

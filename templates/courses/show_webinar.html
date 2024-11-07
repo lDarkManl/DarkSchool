@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+    <p>{{ schoolwork.title }}</p>
+    <a href="{{ schoolwork.video }}">Видео</a>
+    <form action="{% url 'courses:webinar' schoolwork.pk %}" method="post">
+        {% csrf_token %}
+        {% for task, answer_form in tasks.items %}
+            <p>{{ task.text }}</p>
+            <p>{{ answer_form }}</p>
+        {% endfor %}
+        <button>Отправить</button>
+    </form>
+{% endblock %}

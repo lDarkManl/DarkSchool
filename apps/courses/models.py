@@ -1,4 +1,5 @@
 from django.db import models
+from accounts.models import StudentAccount
 
 class Task(models.Model):
     discipline = models.ForeignKey(
@@ -30,18 +31,10 @@ class Course(models.Model):
     def __str__(self):
         return self.title
 
-
-# Абстрактный класс для занятия
-class SchoolWork(models.Model):
-    video = models.URLField('Ссылка на видео')
-
-    class Meta:
-        abstract = True
-
-
 # Урок, в котором видео и дз
-class Lesson(SchoolWork):
+class Lesson(models.Model):
     title = models.CharField('Название урока', max_length=100)
+    video = models.URLField('Ссылка на видео')
     courses = models.ManyToManyField(
         Course,
         blank=True,
@@ -56,48 +49,15 @@ class Lesson(SchoolWork):
         verbose_name='tasks',
         related_name='lessons'
     )
+    is_lesson = models.BooleanField(default=False)
+    is_webinar = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
 
 
-# Вебинар, в котором ссылка на стрим и дз
-class Webinar(SchoolWork):
-    title = models.CharField('Название вебинара', max_length=100)
-    courses = models.ManyToManyField(
-        Course,
-        blank=True,
-        null=True,
-        verbose_name='courses',
-        related_name='webinars'
-    )
-    tasks = models.ManyToManyField(
-        'courses.Task',
-        blank=True,
-        null=True,
-        verbose_name='tasks',
-        related_name='webinars'
-    )
-
-    def __str__(self):
-        return self.title
-
-
-# Ответ ученика на конкретное задание в уроке
-class StudentAnswer(models.Model):
+class StudentAnswerLesson(models.Model):
     answer = models.CharField('Ответ на задание', max_length=200, blank=True, null=True)
-
-    def __str__(self):
-        return self.answer
-
-    def check_answer(self):
-        return self.answer == self.task.answer
-
-    class Meta:
-        abstract = True
-
-
-class StudentAnswerLesson(StudentAnswer):
     lesson = models.ForeignKey(
         Lesson,
         on_delete=models.CASCADE,
@@ -110,22 +70,18 @@ class StudentAnswerLesson(StudentAnswer):
         verbose_name='task',
         related_name='answers_lessons'
     )
-
-
-class StudentAnswerWebinar(StudentAnswer):
-    webinar = models.ForeignKey(
-        Webinar,
+    student = models.ForeignKey(
+        StudentAccount,
         on_delete=models.CASCADE,
-        verbose_name='webinar',
-        related_name='answers'
-    )
-    task = models.ForeignKey(
-        'courses.Task',
-        on_delete=models.CASCADE,
-        verbose_name='task',
-        related_name='answers_webinars'
+        verbose_name='student',
+        related_name='answers_lessons'
     )
 
+    def __str__(self):
+        return self.answer
+
+    def check_answer(self):
+        return self.answer == self.task.answer
 
 class Discipline(models.Model):
     title = models.CharField('Название предмета', max_length=100)

@@ -4,10 +4,9 @@ from django.views import View
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from courses.models import Course, Lesson, Webinar, Task
+from courses.models import Course, Lesson, Task, StudentAnswerLesson
 from courses import services
-from courses.forms import LessonForm, WebinarForm, CourseForm, TaskForm
-
+from courses.forms import LessonForm, CourseForm, TaskForm
 
 
 class ShowCourses(ListView):
@@ -26,28 +25,15 @@ class ShowLesson(View):
 
     def get(self, request, pk):
         context = services.get_context_for_lesson(pk)
-        return render(request, 'courses/show_schoolwork.html', context)
+        return render(request, 'courses/show_lesson.html', context)
 
     def post(self, request, pk):
         form = services.save_answers(request)
         if form:
             context = services.get_context_for_lesson(pk)
-            return render(request, 'courses/show_schoolwork.html', context)
+            return render(request, 'courses/show_lesson.html', context)
         return HttpResponseRedirect(reverse('courses:lesson', args=[pk]))
 
-
-class ShowWebinar(View):
-
-    def get(self, request, pk):
-        context = services.get_context_for_webinar(pk)
-        return render(request, 'courses/show_schoolwork.html', context)
-
-    def post(self, request, pk):
-        form = services.save_answers(request)
-        if form:
-            context = services.get_context_for_webinar(pk)
-            return render(request, 'courses/show_schoolwork.html', context)
-        return HttpResponseRedirect(reverse('courses:webinar', args=[pk]))
 
 class CreateTask(services.TeacherRequiredMixin, LoginRequiredMixin, CreateView):
     model = Task
@@ -68,14 +54,6 @@ class CreateLesson(services.TeacherRequiredMixin, LoginRequiredMixin, CreateView
 
     def get_success_url(self):
         return reverse('courses:lesson', args=[self.object.pk])
-
-class CreateWebinar(services.TeacherRequiredMixin, LoginRequiredMixin, CreateView):
-    model = Webinar
-    form_class = WebinarForm
-    template_name = 'courses/create_webinar.html'
-
-    def get_success_url(self):
-        return reverse('courses:webinar', args=[self.object.pk])
 
 class CreateCourse(services.TeacherRequiredMixin, LoginRequiredMixin, CreateView):
     model = Course
@@ -99,3 +77,10 @@ class TaskView(DetailView):
     model = Task
     template_name = 'courses/task.html'
     context_object_name = 'task'
+
+class ShowHomeworkLesson(View):
+
+    def get(self, request, pk):
+        context = services.get_context_for_howework(request, pk)
+
+
