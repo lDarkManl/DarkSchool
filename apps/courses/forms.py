@@ -9,7 +9,7 @@ class TaskForm(forms.ModelForm):
 class StudentAnswerForm(forms.ModelForm):
     class Meta:
         model = StudentAnswerLesson
-        fields = ('task', 'lesson', 'answer', 'student')
+        fields = ('task', 'lesson', 'answer', 'answer_photo', 'student')
         widgets = {
             'task': forms.HiddenInput(),
             'lesson': forms.HiddenInput(),

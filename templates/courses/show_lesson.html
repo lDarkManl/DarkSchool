@@ -4,10 +4,11 @@
 {% block main %}
     <p>{{ lesson.title }}</p>
     <a href="{{ lesson.video }}">Видео</a>
-    <form action="{% url 'courses:lesson' lesson.pk %}" method="post">
+    <form action="{% url 'courses:lesson' lesson.pk %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% for task, answer_form in tasks.items %}
             <p>{{ task.text }}</p>
+            <p>{{ form.errors }}</p>
             <p>{{ answer_form }}</p>
         {% endfor %}
         <button>Отправить</button>

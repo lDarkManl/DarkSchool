@@ -15,10 +15,21 @@ def get_context_for_lesson(pk):
 def save_answers(request):
     lesson = request.POST.get('lesson')
     answers = request.POST.getlist('answer')
+    answers_photo = request.FILES.getlist('answer_photo')
+    print(answers_photo)
     tasks = request.POST.getlist('task')
     for i in range(len(tasks)):
-        form = StudentAnswerForm({'answer': answers[i], 'task': tasks[i], 'lesson': lesson, 'student': request.user.student})
+        form = StudentAnswerForm({
+            'answer': answers[i],
+            'task': tasks[i],
+            'lesson': lesson,
+            'student': request.user.student
+        },
+        {
+            'answer_photo': answers_photo[i]
+        })
         if form.is_valid():
+            print(form.cleaned_data)
             form.save()
         else:
             return form

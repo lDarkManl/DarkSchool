@@ -58,9 +58,12 @@ class Lesson(models.Model):
     def __str__(self):
         return self.title
 
+def get_filename_for_answer(instance, filename):
+    return f'{instance.student.user.id}/{filename}'
 
 class StudentAnswerLesson(models.Model):
     answer = models.CharField('Ответ на задание', max_length=200, blank=True, null=True)
+    answer_photo = models.ImageField('Фото решения', upload_to=get_filename_for_answer, blank=True, null=True)
     lesson = models.ForeignKey(
         Lesson,
         on_delete=models.CASCADE,
@@ -81,7 +84,7 @@ class StudentAnswerLesson(models.Model):
     )
 
     def __str__(self):
-        return self.answer
+        return self.student.name
 
     def check_answer(self):
         return self.answer == self.task.answer
